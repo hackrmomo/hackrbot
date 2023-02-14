@@ -1,0 +1,36 @@
+version: '3.9'
+networks:
+  server:
+    external: true
+services:
+  hackrbothackrlabs:
+    container_name: hackrbothackrlabs
+    restart: always
+    networks:
+      server:
+        aliases:
+          - hackrbothackrlabs
+    build: 
+      context: ./web
+      args:
+        - PORT=${PORT}
+        - NPM_TOKEN=${NPM_TOKEN}
+    env_file:
+      - .env
+    volumes:
+      - ./web:/usr/local/share/hackrbot.hackrlabs.dev
+      - ./web/public/static:/usr/local/share/hackrbot.hackrlabs.dev/public/static
+    depends_on:
+      - dbhackrbothackrlabs
+  dbhackrbothackrlabs:
+    container_name: dbhackrbothackrlabs
+    image: postgres
+    restart: always
+    networks:
+      server:
+        aliases:
+          - dbhackrbothackrlabs
+    env_file:
+      - .env
+    volumes:
+      - ./db:/var/lib/postgresql/data
