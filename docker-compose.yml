@@ -34,3 +34,20 @@ services:
       - .env
     volumes:
       - ./db:/var/lib/postgresql/data
+  bothackrbothackrlabs:
+    container_name: bothackrbothackrlabs
+    restart: always
+    networks:
+      server:
+        aliases:
+          - bothackrbothackrlabs
+          - bot
+    build:
+      context: ./bot
+      args:
+        - PORT=${PORT}
+    env_file:
+      - .env
+    volumes:
+      - ./bot:/usr/local/share/bot.hackrbot.hackrlabs.dev
+      - /usr/local/share/bot.hackrbot.hackrlabs.dev/dist

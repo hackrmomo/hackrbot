@@ -1,0 +1,37 @@
+{
+  "dependencies": {
+    "@discord-player/extractor": "^4.0.0",
+    "@discordjs/opus": "^0.9.0",
+    "@discordjs/voice": "^0.14.0",
+    "@types/koa-bodyparser": "^4.3.10",
+    "@types/koa-json": "^2.0.20",
+    "@types/koa-logger": "^3.1.2",
+    "@types/koa-router": "^7.4.4",
+    "discord-player": "^5.4.0",
+    "discord.js": "^14.7.1",
+    "ffmpeg-static": "^5.1.0",
+    "koa": "^2.14.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa-json": "^2.0.2",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^12.0.0",
+    "libsodium-wrappers": "^0.7.10",
+    "nodemon": "^2.0.20",
+    "ytdl-core": "^4.11.2"
+  },
+  "scripts": {
+    "build": "tsc && node dist/bot.js",
+    "dev": "nodemon -e ts --exec \"yarn build\""
+  },
+  "name": "bot",
+  "version": "1.0.0",
+  "description": "hackrbot",
+  "repository": "https://github.com/hackrmomo/hackrbot",
+  "author": "Mohammad Al-Ahdal <mo@mohammad.dev>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/koa": "^2.13.5",
+    "@types/node": "^18.13.0",
+    "typescript": "^4.9.5"
+  }
+}
