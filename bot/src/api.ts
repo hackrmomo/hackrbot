@@ -25,13 +25,64 @@ router.post("/command", async (ctx, next) => {
   };
   switch (command) {
     case "join":
+    case "j":
       ctx.body = await bot.music.join(userId, guildId);
       break;
     case "leave":
       ctx.body = await bot.music.leave(guildId);
       break;
     case "play":
+    case "p":
       ctx.body = await bot.music.play(userId, guildId, params.song);
+      break;
+    case "pause":
+      ctx.body = await bot.music.pause(guildId);
+      break;
+    case "resume":
+      ctx.body = await bot.music.resume(guildId);
+      break;
+    case "stop":
+      ctx.body = await bot.music.stop(guildId);
+      break;
+    case "skip":
+    case "s":
+      ctx.body = await bot.music.skip(guildId);
+      break;
+    case "queue":
+    case "q":
+      ctx.body = await bot.music.readQueue(guildId);
+      break;
+    case "clear":
+    case "c":
+      ctx.body = await bot.music.clear(guildId);
+      break;
+    case "shuffle":
+    case "sh":
+      ctx.body = await bot.music.shuffle(guildId);
+      break;
+    case "loop":
+    case "l":
+      ctx.body = await bot.music.loop(guildId, true);
+      break;
+    case "unloop":
+    case "ul":
+      ctx.body = await bot.music.loop(guildId, false);
+      break;
+    case "nowplaying":
+    case "np":
+      ctx.body = await bot.music.np(guildId);
+      break;
+    case "remove":
+    case "rm":
+      ctx.body = await bot.music.remove(guildId, params.index);
+      break;
+    case "move":
+    case "mv":
+      ctx.body = await bot.music.move(guildId, params.from, params.to);
+      break;
+    case "playnext":
+    case "pn":
+      ctx.body = await bot.music.playNext(guildId, params.song);
       break;
     default:
       ctx.body = "unknown command";

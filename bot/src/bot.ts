@@ -2,12 +2,24 @@ import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
 import { commands } from "./config";
 import { music } from "./music";
 import "./api"
+import { Player } from "discord-player";
 
 export const client = new Client({ intents: [
   GatewayIntentBits.Guilds,
   GatewayIntentBits.GuildMessages,
   GatewayIntentBits.GuildVoiceStates,
 ] });
+
+export const player = new Player(client, {
+  ytdlOptions: {
+    quality: "highestaudio",
+    highWaterMark: 1 << 25,
+    filter: "audioonly",
+    dlChunkSize: 0,
+  },
+  smoothVolume: true,
+  connectionTimeout: 10000,
+});
 
 client.on("ready", () => {
   console.log(`Logged in as ${client.user?.tag}!`);

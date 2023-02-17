@@ -56,36 +56,8 @@ export const commands  = [
     description: "hackrbot unloops the current queue",
   },
   {
-    name: "volume",
-    description: "hackrbot sets the volume",
-    options: [
-      {
-        name: "volume",
-        description: "the volume to set",
-        type: 4,
-        required: true,
-      },
-    ],
-  },
-  {
-    name: "seek",
-    description: "hackrbot seeks to a certain time in the current song",
-    options: [
-      {
-        name: "time",
-        description: "the time to seek to",
-        type: 3,
-        required: true,
-      },
-    ],
-  },
-  {
-    name: "nowplaying",
+    name: "np",
     description: "hackrbot shows the current song",
-  },
-  {
-    name: "lyrics",
-    description: "hackrbot shows the lyrics of the current song",
   },
   {
     name: "search",
@@ -136,30 +108,6 @@ export const commands  = [
       {
         name: "song",
         description: "the song to play next",
-        type: 3,
-        required: true,
-      },
-    ],
-  },
-  {
-    name: "playlater",
-    description: "hackrbot plays a song later in the queue",
-    options: [
-      {
-        name: "song",
-        description: "the song to play later",
-        type: 3,
-        required: true,
-      },
-    ],
-  },
-  {
-    name: "playnow",
-    description: "hackrbot plays a song now in the queue",
-    options: [
-      {
-        name: "song",
-        description: "the song to play now",
         type: 3,
         required: true,
       },
