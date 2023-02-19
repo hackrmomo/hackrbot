@@ -1,13 +1,18 @@
 import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
 import { commands } from "./config";
 import { music } from "./music";
-import "./api"
+import { performInteraction, onMessageInChannel } from "./interactor";
+import "./api";
 import { Player } from "discord-player";
 
 export const client = new Client({ intents: [
   GatewayIntentBits.Guilds,
   GatewayIntentBits.GuildMessages,
   GatewayIntentBits.GuildVoiceStates,
+  GatewayIntentBits.GuildMessages,
+  GatewayIntentBits.GuildMessageReactions,
+  GatewayIntentBits.GuildMessageTyping,
+  GatewayIntentBits.MessageContent,
 ] });
 
 export const player = new Player(client, {
@@ -26,13 +31,11 @@ client.on("ready", () => {
 });
 
 client.on("interactionCreate", async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+  await performInteraction(interaction);
+});
 
-  const { commandName } = interaction;
-  switch (commandName) {
-    default:
-      await interaction.reply("Unknown command");
-  }
+client.on("messageCreate", async (message) => {
+  await onMessageInChannel(message);
 });
 
 const startBot = (async () => {

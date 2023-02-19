@@ -13,7 +13,8 @@ const getQueue = (guildId: string, userId: string = undefined) => {
       },
       leaveOnEmpty: false,
       leaveOnEnd: false,
-      leaveOnStop: false
+      leaveOnStop: false,
+      autoSelfDeaf: false,
     });
   }
   return queue;
@@ -111,16 +112,20 @@ const skip = async (guildId: string) => {
 };
 
 const readQueue = async (guildId: string) => {
-  const queue = getQueue(guildId);
-  if (!queue) {
-    return { status: "error", message: "Queue not found" };
+  try {
+    const queue = getQueue(guildId);
+    if (!queue) {
+      return { status: "error", message: "Queue not found" };
+    }
+    const tracksList: string[] = [];
+    queue.nowPlaying() && tracksList.push(`Now Playing: ${queue.nowPlaying().title} | ${queue.nowPlaying().duration} | ${queue.nowPlaying().requestedBy}`);
+    queue.tracks.forEach((track, index) => {
+      tracksList.push(`${index + 1}. ${track.title} | ${track.duration} | ${track.requestedBy}`);
+    });
+    return { status: "ok", message: tracksList };
+  } catch (e) {
+    return { status: "ok", message: "No tracks in queue" };
   }
-  const tracksList: string[] = [];
-  queue.nowPlaying() && tracksList.push(`Now Playing: ${queue.nowPlaying().title} | ${queue.nowPlaying().duration} | ${queue.nowPlaying().requestedBy}`);
-  queue.tracks.forEach((track, index) => {
-    tracksList.push(`${index + 1}. ${track.title} | ${track.duration} | ${track.requestedBy}`);
-  });
-  return { status: "ok", message: tracksList };
 };
 
 const clear = async (guildId: string) => {
