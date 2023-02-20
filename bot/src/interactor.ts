@@ -1,4 +1,4 @@
-import { Interaction, Message } from "discord.js";
+import { CommandInteraction, Interaction, Message } from "discord.js";
 import { client, bot } from "./bot";
 
 export const onMessageInChannel = async (message: Message) => {
@@ -8,15 +8,9 @@ export const onMessageInChannel = async (message: Message) => {
   }
 };
 
-const deleteInteractionMessage = async (interaction: Interaction) => {
+const deleteInteractionMessage = async (interaction: CommandInteraction) => {
   setTimeout(async () => {
-    await interaction.channel.messages.fetch({ limit: 1 }).then(messages => {
-      messages.forEach(message => {
-        if (message.deletable) {
-          message.delete();
-        }
-      });
-    })
+    await interaction.deleteReply();
   }, 3000);
 };
 
@@ -66,7 +60,7 @@ export const performInteraction = async (interaction: Interaction) => {
       break;
     case "queue":
     case "q":
-      await interaction.reply({ content: "Reading queue..." });
+      await interaction.reply({ content: "Reading queue...", ephemeral: true });
       const queue = await bot.music.readQueue(interaction.guildId);
       if (typeof queue.message === "string") {
         await interaction.editReply({ content: "Something is broken!" });
@@ -104,7 +98,7 @@ export const performInteraction = async (interaction: Interaction) => {
       break;
     case "nowplaying":
     case "np":
-      await interaction.reply({ content: "Reading now playing..." });
+      await interaction.reply({ content: "Reading now playing...", ephemeral: true});
       const np = await bot.music.np(interaction.guildId);
       await interaction.editReply(`Now playing: ${np.message}`);
       break;
