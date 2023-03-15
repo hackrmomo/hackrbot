@@ -20,10 +20,6 @@ export const commands  = [
     ],
   },
   {
-    name: "stop",
-    description: "hackrbot stops playing music",
-  },
-  {
     name: "pause",
     description: "hackrbot pauses playing music",
   },
@@ -56,20 +52,8 @@ export const commands  = [
     description: "hackrbot unloops the current queue",
   },
   {
-    name: "np",
+    name: "nowplaying",
     description: "hackrbot shows the current song",
-  },
-  {
-    name: "search",
-    description: "hackrbot searches for a song",
-    options: [  
-      {
-        name: "song",
-        description: "the song to search for",
-        type: 3,
-        required: true,
-      },
-    ],
   },
   {
     name: "remove",
@@ -102,15 +86,11 @@ export const commands  = [
     ],
   },
   {
-    name: "playnext",
-    description: "hackrbot plays a song next in the queue",
-    options: [
-      {
-        name: "song",
-        description: "the song to play next",
-        type: 3,
-        required: true,
-      },
-    ],
+    name: "autoplay",
+    description: "hackrbot enables autoplay",
+  },
+  {
+    name: "loopsong",
+    description: "hackrbot loops the current song",
   }
 ]

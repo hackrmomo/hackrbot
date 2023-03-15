@@ -1,12 +1,6 @@
+import { QueueRepeatMode } from "discord-player";
 import { CommandInteraction, Interaction, Message } from "discord.js";
 import { client, bot } from "./bot";
-
-export const onMessageInChannel = async (message: Message) => {
-  if (message.author.bot) return;
-  if (message.channel.id === "1076917113656180816" && message.deletable) {
-    await message.delete();
-  }
-};
 
 const deleteInteractionMessage = async (interaction: CommandInteraction) => {
   setTimeout(async () => {
@@ -47,11 +41,6 @@ export const performInteraction = async (interaction: Interaction) => {
       await bot.music.resume(interaction.guildId);
       await interaction.editReply("Resumed!");
       break;
-    case "stop":
-      await interaction.reply({ content: "Stopping..." });
-      await bot.music.stop(interaction.guildId);
-      await interaction.editReply("Stopped!");
-      break;
     case "skip":
     case "s":
       await interaction.reply({ content: "Skipping..." });
@@ -70,8 +59,8 @@ export const performInteraction = async (interaction: Interaction) => {
         await interaction.editReply("Queue is empty!");
         return;
       }
-      await interaction.editReply(`Queue: ${queue.message.map((song) => song).join(",\n")}`);
-      break;
+      await interaction.editReply(`Queue: ${queue.message.map((song) => song).join(",\n")}`.substring(0, 2000));
+      return;
     case "clear":
     case "c":
       await interaction.reply({ content: "Clearing..." });
@@ -87,21 +76,31 @@ export const performInteraction = async (interaction: Interaction) => {
     case "loop":
     case "l":
       await interaction.reply({ content: "Looping..." });
-      await bot.music.loop(interaction.guildId, true);
+      await bot.music.loop(interaction.guildId, QueueRepeatMode.QUEUE);
       await interaction.editReply("Looped!");
       break;
     case "unloop":
     case "ul":
       await interaction.reply({ content: "Unlooping..." });
-      await bot.music.loop(interaction.guildId, false);
+      await bot.music.loop(interaction.guildId, QueueRepeatMode.OFF);
       await interaction.editReply("Unlooped!");
       break;
+    case "loopsong":
+      await interaction.reply({ content: "Looping song..." });
+      await bot.music.loop(interaction.guildId, QueueRepeatMode.TRACK);
+      await interaction.editReply("Looped song!");
+      break;
+    case "autoplay":
+    case "ap":
+      await interaction.reply({ content: "Autoplaying..." });
+      await bot.music.loop(interaction.guildId, QueueRepeatMode.AUTOPLAY);
+      await interaction.editReply("Autoplayed!");
     case "nowplaying":
     case "np":
       await interaction.reply({ content: "Reading now playing...", ephemeral: true});
       const np = await bot.music.np(interaction.guildId);
       await interaction.editReply(`Now playing: ${np.message}`);
-      break;
+      return;
     case "remove":
     case "rm":
       await interaction.reply({ content: "Removing..." });
@@ -113,12 +112,6 @@ export const performInteraction = async (interaction: Interaction) => {
       await interaction.reply({ content: "Moving..." });
       await bot.music.move(interaction.guildId, options.get("song").value as number, options.get("index").value as number);
       await interaction.editReply(`Moved ${options.get("song").value} to ${options.get("index").value}!`);
-      break;
-    case "playnext":
-    case "pn":
-      await interaction.reply({ content: "Playing next..." });
-      await bot.music.playNext(interaction.guildId, options.get("song").value as string);
-      await interaction.editReply(`Playing ${options.get("song").value} next!`);
       break;
     default:
       await interaction.reply({ content: "Unknown Command" });

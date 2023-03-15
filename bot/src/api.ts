@@ -4,6 +4,7 @@ import KoaLogger from "koa-logger";
 import json from "koa-json";
 import bodyParser from "koa-bodyparser";
 import { client, bot } from "./bot";
+import { QueueRepeatMode } from "discord-player";
 
 // @ts-ignore
 BigInt.prototype.toJSON = function () { return this.toString() }
@@ -41,9 +42,6 @@ router.post("/command", async (ctx, next) => {
     case "resume":
       ctx.body = await bot.music.resume(guildId);
       break;
-    case "stop":
-      ctx.body = await bot.music.stop(guildId);
-      break;
     case "skip":
     case "s":
       ctx.body = await bot.music.skip(guildId);
@@ -62,11 +60,18 @@ router.post("/command", async (ctx, next) => {
       break;
     case "loop":
     case "l":
-      ctx.body = await bot.music.loop(guildId, true);
+      ctx.body = await bot.music.loop(guildId, QueueRepeatMode.QUEUE);
       break;
     case "unloop":
     case "ul":
-      ctx.body = await bot.music.loop(guildId, false);
+      ctx.body = await bot.music.loop(guildId, QueueRepeatMode.OFF);
+      break;
+    case "loopsong":
+      ctx.body = await bot.music.loop(guildId, QueueRepeatMode.TRACK);
+      break;
+    case "autoplay":
+    case "ap":
+      ctx.body = await bot.music.loop(guildId, QueueRepeatMode.AUTOPLAY);
       break;
     case "nowplaying":
     case "np":
@@ -79,10 +84,6 @@ router.post("/command", async (ctx, next) => {
     case "move":
     case "mv":
       ctx.body = await bot.music.move(guildId, params.from, params.to);
-      break;
-    case "playnext":
-    case "pn":
-      ctx.body = await bot.music.playNext(guildId, params.song);
       break;
     default:
       ctx.body = "unknown command";

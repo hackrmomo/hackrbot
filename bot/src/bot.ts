@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
 import { commands } from "./config";
 import { music } from "./music";
-import { performInteraction, onMessageInChannel } from "./interactor";
+import { performInteraction } from "./interactor";
 import "./api";
 import { Player } from "discord-player";
 
@@ -32,10 +32,6 @@ client.on("ready", () => {
 
 client.on("interactionCreate", async (interaction) => {
   await performInteraction(interaction);
-});
-
-client.on("messageCreate", async (message) => {
-  await onMessageInChannel(message);
 });
 
 const startBot = (async () => {
