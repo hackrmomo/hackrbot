@@ -80,7 +80,7 @@ jobs:
             cd ~/hackrbot
             # unpack .env directory
             rm -rf .env
-            mv env/.env .env
+            mv env/.env/.env .env
             rm -rf env
             git reset --hard
             git pull
