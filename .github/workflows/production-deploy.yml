@@ -45,8 +45,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
       - name: Download Env File
         uses: actions/download-artifact@v2
         with:
@@ -59,7 +59,6 @@ jobs:
           username: ${{ secrets.HACKRPROD_USER }}
           key: ${{ secrets.HACKRPROD_KEY }}
           port: ${{ secrets.HACKRPROD_PORT }}
-          password: ${{ secrets.HACKRPROD_PASS }}
           script: |
             cd ~/hackbot
             git pull
