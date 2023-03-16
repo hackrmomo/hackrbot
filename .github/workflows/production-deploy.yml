@@ -82,4 +82,4 @@ jobs:
             rm -rf .env.bak
             git reset --hard
             git pull
-            echo $PASS
+            echo ${PASS}
