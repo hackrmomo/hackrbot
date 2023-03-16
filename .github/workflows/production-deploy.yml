@@ -62,7 +62,7 @@ jobs:
           key: ${{ secrets.HACKRPROD_KEY }}
           port: ${{ secrets.HACKRPROD_PORT }}
           source: .env/.env
-          target: ~/hackrbot/
+          target: ~/hackrbot/env
           debug: true
           overwrite: true
       - name: Deploy to Production
@@ -79,9 +79,8 @@ jobs:
           script: |
             cd ~/hackrbot
             # unpack .env directory
-            mv .env .env.bak
-            mv .env.bak/.env .env
-            rm -rf .env.bak
+            mv env/.env .env
+            rm -rf env
             git reset --hard
             git pull
             echo PASS=$PASS
