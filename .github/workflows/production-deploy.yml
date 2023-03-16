@@ -39,8 +39,6 @@ jobs:
   Deploy:
     needs: Generate-Env-File
     runs-on: ubuntu-22.04
-    env:
-      PASS: ${{ secrets.HACKRPROD_PASS }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -56,7 +54,9 @@ jobs:
           username: ${{ secrets.HACKRPROD_USER }}
           key: ${{ secrets.HACKRPROD_KEY }}
           port: ${{ secrets.HACKRPROD_PORT }}
+          password: ${{ secrets.HACKRPROD_PASS }}
           script: |
             cd ~/hackbot
             git pull
-            echo ${{PASS}} | sudo -S docker-compose up -d --build --force-recreate
+            echo ${{password}} | sudo -S docker-compose up -d --build --force-recreate
+        
