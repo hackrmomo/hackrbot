@@ -52,6 +52,11 @@ jobs:
           path: .env
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
+        env:
+          HACKRPROD_HOSTNAME: ${{ secrets.HACKRPROD_HOSTNAME }}
+          HACKRPROD_USER: ${{ secrets.HACKRPROD_USER }}
+          HACKRPROD_KEY: ${{ secrets.HACKRPROD_KEY }}
+          HACKRPROD_PORT: ${{ secrets.HACKRPROD_PORT }}
       - name: Deploy to Production
         uses: appleboy/ssh-action@master
         with:
