@@ -79,6 +79,7 @@ jobs:
           script: |
             cd ~/hackrbot
             # unpack .env directory
+            rm -rf .env
             mv env/.env .env
             rm -rf env
             git reset --hard
