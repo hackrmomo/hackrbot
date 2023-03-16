@@ -1,0 +1,38 @@
+name: Deploy to Production
+on:
+  push:
+    branches:
+      - main
+      - 'release/**'
+jobs: 
+  Generate-Env-File:
+    runs-on: ubuntu-22.04
+    env:
+      PORT: ${{ vars.PORT }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      HACKRBOT_TOKEN: ${{ secrets.HACKRBOT_TOKEN }}
+      DISCORD_CLIENT_ID: ${{ vars.DISCORD_CLIENT_ID }}
+      DISCORD_CLIENT_SECRET: ${{ secrets.DISCORD_CLIENT_SECRET }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      HACKRBOT_DB_URL: ${{ secrets.HACKRBOT_DB_URL }}
+      NEXTAUTH_URL: ${{ vars.NEXTAUTH_URL }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate Env File
+        run: |
+          echo "PORT=${PORT}" >> .env;
+          echo "NPM_TOKEN=${NPM_TOKEN}" >> .env;
+          echo "HACKRBOT_TOKEN=${HACKRBOT_TOKEN}" >> .env;
+          echo "DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}" >> .env;
+          echo "DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}" >> .env;
+          echo "JWT_SECRET=${JWT_SECRET}" >> .env;
+          echo "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}" >> .env;
+          echo "HACKRBOT_DB_URL=${HACKRBOT_DB_URL}" >> .env;
+          echo "NEXTAUTH_URL=${NEXTAUTH_URL}" >> .env;
+      - name: Upload Env File
+        uses: actions/upload-artifact@v2
+        with:
+          name: env-file
+          path: .env
