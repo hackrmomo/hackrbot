@@ -83,4 +83,4 @@ jobs:
             rm -rf env
             git reset --hard
             git pull
-            echo PASS=$PASS
+            echo $PASS | sudo -S docker-compose up -d --build --force-recreate
