@@ -31,6 +31,7 @@ jobs:
           echo "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}" >> .env;
           echo "HACKRBOT_DB_URL=${HACKRBOT_DB_URL}" >> .env;
           echo "NEXTAUTH_URL=${NEXTAUTH_URL}" >> .env;
+          echo "${NEXTAUTH_URL}";
       - name: Upload Env File
         uses: actions/upload-artifact@v2
         with:
@@ -58,5 +59,5 @@ jobs:
           script: |
             cd ~/hackbot
             git pull
-            echo $password | sudo -S docker-compose up -d --build --force-recreate
+            echo "Hello World"
         
