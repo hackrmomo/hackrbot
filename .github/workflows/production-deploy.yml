@@ -34,5 +34,29 @@ jobs:
       - name: Upload Env File
         uses: actions/upload-artifact@v2
         with:
-          name: env-file
+          name: .env
           path: .env
+  Deploy:
+    needs: Generate-Env-File
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download Env File
+        uses: actions/download-artifact@v2
+        with:
+          name: .env
+          path: .env
+      - name: Deploy to Production
+        uses: appleboy/ssh-action@master
+        env:
+          PASS: ${{ secrets.HACKRPROD_PASS }}
+        with:
+          host: ${{ secrets.HACKRPROD_HOSTNAME }}
+          username: ${{ secrets.HACKRPROD_USER }}
+          key: ${{ secrets.HACKRPROD_KEY }}
+          port: ${{ secrets.HACKRPROD_PORT }}
+          script: |
+            cd ~/hackbot
+            git pull
+            echo ${{PASS}} | sudo -S docker-compose up -d --build --force-recreate
