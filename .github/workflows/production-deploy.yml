@@ -62,4 +62,4 @@ jobs:
           script: |
             cd ~/hackrbot
             git pull
-            echo $NEXTAUTH_URL
+            echo NEXTAUTH_URL=$NEXTAUTH_URL
