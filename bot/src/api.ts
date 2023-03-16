@@ -5,12 +5,18 @@ import json from "koa-json";
 import bodyParser from "koa-bodyparser";
 import { client, bot } from "./bot";
 import { QueueRepeatMode } from "discord-player";
+import {commands} from "./config";
 
 // @ts-ignore
 BigInt.prototype.toJSON = function () { return this.toString() }
 
 const app = new Koa();
 const router = new Router();
+
+router.get("/commands", async (ctx, next) => {
+  ctx.body = commands;
+  await next();
+})
 
 router.post("/command", async (ctx, next) => {
   const {

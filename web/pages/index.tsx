@@ -1,21 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Container } from '@mui/system';
 import { Autocomplete, Box, Button, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Paper, Select, TextField, Typography } from '@mui/material';
 
-import { commands } from "@/lib/config"
 import { FaIcon } from '@/components/FaIcon';
 import { faArrowRight } from '@fortawesome/sharp-solid-svg-icons';
 import axios from 'axios';
+import { Command } from '@/models/Command';
 
 export default function Home() {
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
   const [server, setServer] = useState<string>("")
+  const [commands, setCommands] = useState<Command[]>([])
   const [command, setCommand] = useState<string>("")
-  const [params, setParams] = useState<{[key: string]: any }>({})
+  const [params, setParams] = useState<{ [key: string]: any }>({})
+
+  const getCommands = async () => {
+    const { data } = await axios.get<Command[]>("/api/commands")
+    return data
+  }
+
+  useEffect(() => {
+    getCommands().then((data) => {
+      setCommands(data)
+    })
+  }, [])
 
   return (
     <>
@@ -86,7 +96,7 @@ export default function Home() {
                       </Box>
                     ))}
                     <Box>
-                      <Button disabled={!command || !server} sx={{height: 56}} fullWidth variant="outlined" color='secondary' onClick={async () => {
+                      <Button disabled={!command || !server} sx={{ height: 56 }} fullWidth variant="outlined" color='secondary' onClick={async () => {
                         await axios.post("/api/bot", {
                           command,
                           userId: session.user.discordId,
