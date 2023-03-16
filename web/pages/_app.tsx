@@ -4,12 +4,14 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import type { AppProps } from 'next/app'
 import { SessionProvider, useSession, signIn, signOut } from 'next-auth/react'
-import { createTheme, ThemeProvider, ThemeOptions, AppBar, Toolbar, IconButton, Typography, Button, CssBaseline } from '@mui/material';
+import { createTheme, ThemeProvider, ThemeOptions, AppBar, Toolbar, IconButton, Typography, Button, CssBaseline, Drawer, ListItem, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { faRobot } from '@fortawesome/sharp-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Menu } from '@mui/icons-material';
 import axios from 'axios';
 import { Box } from '@mui/system';
+import { useState } from 'react';
+import { Link } from '@/components/UnstyledLink'; 
 
 
 export default function App(props: AppProps) {
@@ -48,6 +50,7 @@ export const themeOptions: ThemeOptions = {
 
 const Content = ({ Component, pageProps }: AppProps) => {
   const { data: session, status } = useSession();
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   return <>
     {status === 'loading' && <>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -55,7 +58,7 @@ const Content = ({ Component, pageProps }: AppProps) => {
       </Box>
     </>}
     {status !== 'loading' && <>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             size="large"
@@ -63,11 +66,14 @@ const Content = ({ Component, pageProps }: AppProps) => {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick={() => setSidebarOpen(true)}
           >
             <Menu />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            👾 hackrbot 🤖
+            <Link href='/' passHref>
+              👾 hackrbot 🤖
+            </Link>
           </Typography>
           <Button color="error" onClick={() => {
             axios.post('/api/reset');
@@ -79,6 +85,25 @@ const Content = ({ Component, pageProps }: AppProps) => {
           )}
         </Toolbar>
       </AppBar>
+      <Drawer
+        anchor='left'
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      >
+        <List>
+          {session && session.user.servers && session.user.servers.map((server) => <>
+            <ListItem key={server.id}>
+              <Link href={`/server/${server.id}`} passHref>
+                <ListItemButton onClick={() => {
+                  setSidebarOpen(false);
+                }}>
+                  <ListItemText primary={server.name} />
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          </>)}
+        </List>
+      </Drawer>
       <Component {...pageProps} />
     </>}
   </>

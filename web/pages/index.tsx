@@ -40,75 +40,14 @@ export default function Home() {
           {
             session
               ? <>
-                <Grid container spacing={4} sx={{ marginTop: "1em" }}>
-                  <Grid item xs={12}>
-                    <Typography variant='h3'>{`Welcome, ${session.user.name}!`}</Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControl fullWidth>
-                      <InputLabel id="server-label">Server</InputLabel>
-                      <Select
-                        labelId="server-label"
-                        value={server}
-                        onChange={(e) => setServer(e.target.value as string)}
-                        input={<OutlinedInput label="Server" />}
-                      >
-                        {(session.user.servers ?? []).map((server) => (
-                          <MenuItem key={server.id} value={server.id}>{server.name}</MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid sx={{ display: "flex", flexDirection: "row", gap: 2, " > *": { flex: 1 }, "> *:last-child": { flex: 0 }, alignItems: "center" }} item xs={12}>
-                    <Box key={"selector"}>
-                      <Autocomplete
-                        disablePortal
-                        options={commands}
-                        renderInput={(params) => <TextField {...params} label="Command" variant="outlined" />}
-                        getOptionLabel={(option) => `/${option.name}`}
-                        renderOption={(props, option) => <Box
-                          component="li"
-                          sx={{ gap: 2 }}
-                          {...props}
-                        >
-                          <Typography variant="h6">{`/${option.name}`}</Typography>
-                          <Typography color="gray" variant="body2">{option.description}</Typography>
-                        </Box>}
-                        onInputChange={(e, value) => {
-                          setCommand(value.substring(1))
-                        }}
-                      />
-                    </Box>
-                    {commands.find((c) => c.name === command)?.options?.map((param) => (
-                      <Box key={param.name}>
-                        <TextField
-                          fullWidth
-                          onChange={(e) => {
-                            setParams({
-                              ...params,
-                              [param.name]: e.target.value
-                            })
-                          }}
-                          value={params[param.name]}
-                          label={param.name}
-                          variant="outlined"
-                        />
-                      </Box>
-                    ))}
-                    <Box>
-                      <Button disabled={!command || !server} sx={{ height: 56 }} fullWidth variant="outlined" color='secondary' onClick={async () => {
-                        await axios.post("/api/bot", {
-                          command,
-                          userId: session.user.discordId,
-                          guildId: server,
-                          params: params
-                        })
-                      }}>
-                        <FaIcon icon={faArrowRight} />
-                      </Button>
-                    </Box>
-                  </Grid>
-                </Grid>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                  <Paper sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }} elevation={24}>
+                    <Typography variant='h3'>Great to have you here, {session.user.name}! 👋🏽</Typography>
+                    <Typography variant='h5'>To get started, select one of the servers from the sidebar!</Typography>
+                    <Typography variant='subtitle1'>If you don't see a server there, hackrbot isn't available for your server just yet.</Typography>
+                    <Typography variant='subtitle1'>hackrbot is a bot dedicated to hackr's servers only. If you know him, reach out!</Typography>
+                  </Paper>
+                </Box>
               </>
               : <>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
