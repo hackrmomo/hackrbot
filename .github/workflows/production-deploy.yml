@@ -57,9 +57,9 @@ jobs:
           username: ${{ secrets.HACKRPROD_USER }}
           key: ${{ secrets.HACKRPROD_KEY }}
           port: ${{ secrets.HACKRPROD_PORT }}
+          envs: .env
           debug: true
           script: |
-            cd ~/hackbot
+            cd ~/hacrkbot
             git pull
-            echo "Hello World"
-        
+            echo $NEXTAUTH_URL
