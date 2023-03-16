@@ -39,6 +39,8 @@ jobs:
   Deploy:
     needs: Generate-Env-File
     runs-on: ubuntu-22.04
+    env:
+      PASS: ${{ secrets.HACKRPROD_PASS }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -49,8 +51,6 @@ jobs:
           path: .env
       - name: Deploy to Production
         uses: appleboy/ssh-action@master
-        env:
-          PASS: ${{ secrets.HACKRPROD_PASS }}
         with:
           host: ${{ secrets.HACKRPROD_HOSTNAME }}
           username: ${{ secrets.HACKRPROD_USER }}
