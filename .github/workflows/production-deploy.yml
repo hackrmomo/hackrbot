@@ -58,5 +58,5 @@ jobs:
           script: |
             cd ~/hackbot
             git pull
-            echo ${{password}} | sudo -S docker-compose up -d --build --force-recreate
+            echo $password | sudo -S docker-compose up -d --build --force-recreate
         
