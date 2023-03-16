@@ -61,7 +61,7 @@ jobs:
           username: ${{ secrets.HACKRPROD_USER }}
           key: ${{ secrets.HACKRPROD_KEY }}
           port: ${{ secrets.HACKRPROD_PORT }}
-          source: .env
+          source: .env/.env
           target: ~/hackrbot/
           debug: true
       - name: Deploy to Production
