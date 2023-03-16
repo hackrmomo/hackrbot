@@ -64,6 +64,7 @@ jobs:
           source: .env/.env
           target: ~/hackrbot/
           debug: true
+          overwrite: true
       - name: Deploy to Production
         uses: appleboy/ssh-action@master
         env:
@@ -74,6 +75,7 @@ jobs:
           key: ${{ secrets.HACKRPROD_KEY }}
           port: ${{ secrets.HACKRPROD_PORT }}
           debug: true
+          envs: PASS
           script: |
             cd ~/hackrbot
             # unpack .env directory
@@ -82,4 +84,4 @@ jobs:
             rm -rf .env.bak
             git reset --hard
             git pull
-            echo ${PASS}
+            echo PASS=$PASS
