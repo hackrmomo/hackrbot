@@ -7,6 +7,7 @@ on:
 jobs: 
   Generate-Env-File:
     runs-on: ubuntu-22.04
+    environment: prod
     env:
       PORT: ${{ vars.PORT }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -40,6 +41,7 @@ jobs:
   Deploy:
     needs: Generate-Env-File
     runs-on: ubuntu-22.04
+    environment: prod
     steps:
       - name: Checkout
         uses: actions/checkout@v2
