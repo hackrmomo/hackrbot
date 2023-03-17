@@ -2,6 +2,7 @@ import styled from "@emotion/styled"
 import { Box, CircularProgress } from "@mui/material"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
+import Image from "next/image"
 
 
 export default function Server() {
@@ -13,7 +14,7 @@ export default function Server() {
       <Box sx={{ display: 'flex', marginTop: '64px' }}>
         <HeaderHolder sx={{ flexGrow: 1, padding: "0 20px", flexDirection: "row", display: "flex" }}>
           {server?.icon && <object data={server.icon.includes(".") ? server.icon : `https://cdn.discordapp.com/icons/${server?.id}/${server?.icon}.gif`} type="image/png">
-            <img src={server.icon.includes(".") ? server.icon : `https://cdn.discordapp.com/icons/${server?.id}/${server?.icon}.webp`} />
+            <Image src={server.icon.includes(".") ? server.icon : `https://cdn.discordapp.com/icons/${server?.id}/${server?.icon}.webp`} alt="server_icon" />
           </object>}
           <h1>{server?.name}</h1>
         </HeaderHolder>

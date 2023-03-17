@@ -44,8 +44,8 @@ export default function Home() {
                   <Paper sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }} elevation={24}>
                     <Typography variant='h3'>Great to have you here, {session.user.name}! 👋🏽</Typography>
                     <Typography variant='h5'>To get started, select one of the servers from the sidebar!</Typography>
-                    <Typography variant='subtitle1'>If you don't see a server there, hackrbot isn't available for your server just yet.</Typography>
-                    <Typography variant='subtitle1'>hackrbot is a bot dedicated to hackr's servers only. If you know him, reach out!</Typography>
+                    <Typography variant='subtitle1'>If you don&apos;t see a server there, hackrbot isn&apos;t available for your server just yet.</Typography>
+                    <Typography variant='subtitle1'>hackrbot is a bot dedicated to hackr&apos;s servers only. If you know him, reach out!</Typography>
                   </Paper>
                 </Box>
               </>
