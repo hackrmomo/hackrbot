@@ -32,10 +32,8 @@ jobs:
           echo "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}" >> .env;
           echo "HACKRBOT_DB_URL=${HACKRBOT_DB_URL}" >> .env;
           echo "NEXTAUTH_URL=${NEXTAUTH_URL}" >> .env;
-      - name: copy env file to directory
-        run: |
-          cp .env ./hackrbot
-          cd ./hackrbot
+      - name: tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: docker compose build
         run: |
           docker-compose build
