@@ -1,14 +1,35 @@
+import { useEffect } from "react"
 import styled from "@emotion/styled"
 import { Box, CircularProgress } from "@mui/material"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import Image from "next/image"
+import { io, Socket } from "socket.io-client"
+import axios from "axios"
 
+let socket: Socket;
 
 export default function Server() {
   const { data, status } = useSession()
   const { query } = useRouter()
+  
+  const socketInitializer = async () => {
+    await axios.get("/api/socket")
+    socket = io()
+
+    socket.on("connect", () => {
+      console.log("connected")
+    });
+  }
+  
   const server = data?.user?.servers?.find(server => server.id === query.id)
+
+  useEffect(() => {
+    socketInitializer()
+  }, [])
+
+
+  
   return <>
     {status === 'authenticated' && <>
       <Box sx={{ display: 'flex', marginTop: '64px' }}>
