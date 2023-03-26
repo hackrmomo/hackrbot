@@ -3,7 +3,7 @@ import Router from "koa-router";
 import KoaLogger from "koa-logger";
 import json from "koa-json";
 import bodyParser from "koa-bodyparser";
-import { client, bot } from "./bot";
+import { client, bot, connectToSocket } from "./bot";
 import { QueueRepeatMode } from "discord-player";
 import { commands } from "./config";
 
@@ -12,6 +12,18 @@ BigInt.prototype.toJSON = function () { return this.toString() }
 
 const app = new Koa();
 const router = new Router();
+
+router.post("/authorize-bot", async (ctx, next) => {
+  const { token } = ctx.request.body as { token: string };
+  try {
+    connectToSocket(token);
+    ctx.body = "ok";
+  } catch (e) {
+    ctx.body = "error";
+    ctx.status = 500;
+  }
+  await next();
+});
 
 router.get("/commands", async (ctx, next) => {
   ctx.body = commands;

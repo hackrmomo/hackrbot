@@ -7,29 +7,38 @@ import Image from "next/image"
 import { io, Socket } from "socket.io-client"
 import axios from "axios"
 import { Track } from "discord-player"
+import { useCookie } from "next-cookie"
+import { GetServerSidePropsContext } from "next"
 
 let socket: Socket;
 
-export default function Server() {
+export default function Server({ token }: { token: string }) {
   const { data: session, status } = useSession()
-  const { query } = useRouter()
-  const [tracks, setTracks] = useState<Track[]>([])
+  const { query, route } = useRouter()
   const [currentTrack, setCurrentTrack] = useState<Track>()
-  
+
   const socketInitializer = async () => {
+    if (socket) {
+      socket.disconnect().connect();
+    };
     await axios.get("/api/socket")
-    socket = io()
+    socket = io({
+      auth: {
+        token
+      }
+    })
 
     socket.on("connect", () => {
       console.log("connected")
+      socket.emit("client-connect", { guildId: query.id })
     });
   }
-  
+
   const server = session?.user?.servers?.find(server => server.id === query.id)
 
   useEffect(() => {
     socketInitializer()
-  }, [])
+  }, [route])
 
   return <>
     {status === 'authenticated' && server && <>
@@ -63,6 +72,15 @@ export default function Server() {
       </Box>
     </>}
   </>
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const cookie = useCookie(context);
+  return {
+    props: {
+      token: cookie.get("__Secure-next-auth.session-token") ?? ""
+    }
+  };
 }
 
 const HeaderHolder = styled(Box)`

@@ -1,19 +1,41 @@
 import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
 import { commands } from "./config";
-import { music } from "./music";
+import { music, registerEvents } from "./music";
 import { performInteraction } from "./interactor";
 import "./api";
 import { Player } from "discord-player";
+import { io, Socket } from "socket.io-client"
 
-export const client = new Client({ intents: [
-  GatewayIntentBits.Guilds,
-  GatewayIntentBits.GuildMessages,
-  GatewayIntentBits.GuildVoiceStates,
-  GatewayIntentBits.GuildMessages,
-  GatewayIntentBits.GuildMessageReactions,
-  GatewayIntentBits.GuildMessageTyping,
-  GatewayIntentBits.MessageContent,
-] });
+export let socket: Socket;
+
+export const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildMessageTyping,
+    GatewayIntentBits.MessageContent,
+  ]
+});
+
+export const connectToSocket = async (token: string) => {
+  if (socket) {
+    // already connected
+    return;
+  }
+  socket = io("http://web/", {
+    auth: {
+      token
+    }
+  });
+  socket.on("connect", async () => {
+    console.log("Connected to socket");
+    await registerEvents();
+  });
+}
+
 
 export const player = new Player(client, {
   ytdlOptions: {
@@ -59,7 +81,7 @@ const startBot = (async () => {
 
 startBot();
 
-const healthCheck : (finalCheck: boolean) => Promise<{ status: "error" | "ok" }> = async (finalCheck = false) => {
+const healthCheck: (finalCheck: boolean) => Promise<{ status: "error" | "ok" }> = async (finalCheck = false) => {
   if (client) {
     return { status: "ok" };
   } else {

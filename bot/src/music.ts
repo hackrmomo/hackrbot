@@ -1,25 +1,26 @@
-import { client, player } from "./bot";
+import { client, player, socket } from "./bot";
 import { channel } from "diagnostics_channel";
 import { GuildNodeManager, GuildQueuePlayerNode, QueueRepeatMode, StreamDispatcher, useQueue } from "discord-player";
 
 
-// const getQueue = (guildId: string, userId: string = undefined) => {
-//   // return que if it exists otherwise create a new one
-//   const queue = player.getQueue(guildId);
-//   if (!queue) {
-//     if (!userId) return null;
-//     return player.createQueue(guildId, {
-//       metadata: {
-//         channel: client.guilds.cache.get(guildId)?.members.cache.get(userId)?.voice.channel,
-//       },
-//       leaveOnEmpty: false,
-//       leaveOnEnd: false,
-//       leaveOnStop: false,
-//       autoSelfDeaf: false,
-//     });
-//   }
-//   return queue;
-// };
+export const registerEvents = () => {
+  player.events.on("audioTrackAdd", (gq) => {
+    console.log("audioTrackAdded!");
+    heartbeat(gq.guild.id);
+  });
+};
+
+const heartbeat = (guildId: string) => {
+  socket.emit("bot-heartbeat", {
+    guildId,
+    data: {
+      id: guildId,
+      queue: useQueue(guildId).tracks.toArray(),
+      playing: useQueue(guildId).isPlaying,
+      nowPlaying: useQueue(guildId).currentTrack
+    }
+  });
+};
 
 const leave = async (guildId: string) => {
   player.voiceUtils.getConnection(guildId).disconnect();
