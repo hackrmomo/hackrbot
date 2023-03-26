@@ -2,6 +2,8 @@ version: '3.9'
 networks:
   server:
     external: true
+  hackrbot:
+    driver: bridge
 services:
   hackrbothackrlabs:
     container_name: hackrbothackrlabs
@@ -10,6 +12,9 @@ services:
       server:
         aliases:
           - hackrbothackrlabs
+      hackrbot:
+        aliases:
+          - web
     build: 
       context: ./web
       args:
@@ -27,9 +32,9 @@ services:
     image: postgres
     restart: always
     networks:
-      server:
+      hackrbot:
         aliases:
-          - dbhackrbothackrlabs
+          - db
     env_file:
       - .env
     volumes:
@@ -37,10 +42,11 @@ services:
   bothackrbothackrlabs:
     container_name: bothackrbothackrlabs
     restart: always
+    depends_on:
+      - hackrbothackrlabs
     networks:
-      server:
+      hackrbot:
         aliases:
-          - bothackrbothackrlabs
           - bot
     build:
       context: ./bot
