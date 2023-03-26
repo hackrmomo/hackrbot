@@ -111,5 +111,6 @@ declare module "next-auth/jwt" {
     discordId?: string;
     servers?: Guild[];
     accessToken?: string;
+    isBot?: boolean;
   }
 }

@@ -11,10 +11,7 @@ import { Command } from '@/models/Command';
 
 export default function Home() {
   const { data: session } = useSession()
-  const [server, setServer] = useState<string>("")
   const [commands, setCommands] = useState<Command[]>([])
-  const [command, setCommand] = useState<string>("")
-  const [params, setParams] = useState<{ [key: string]: any }>({})
 
   const getCommands = async () => {
     const { data } = await axios.get<Command[]>("/api/commands")
