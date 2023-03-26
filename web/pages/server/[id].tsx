@@ -7,7 +7,7 @@ import Image from "next/image"
 import { io, Socket } from "socket.io-client"
 import axios from "axios"
 import { Track } from "discord-player"
-import { useCookie } from "next-cookie"
+import { getCookie } from "cookies-next"
 import { GetServerSidePropsContext } from "next"
 
 let socket: Socket;
@@ -38,7 +38,7 @@ export default function Server({ token }: { token: string }) {
 
   useEffect(() => {
     socketInitializer()
-  }, [route])
+  }, [route, socketInitializer])
 
   return <>
     {status === 'authenticated' && server && <>
@@ -74,11 +74,11 @@ export default function Server({ token }: { token: string }) {
   </>
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const cookie = useCookie(context);
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+  const cookie = getCookie("__Secure-next-auth.session-token", context);
   return {
     props: {
-      token: cookie.get("__Secure-next-auth.session-token") ?? ""
+      token: cookie ? cookie.toString() : ""
     }
   };
 }
