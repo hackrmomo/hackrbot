@@ -61,6 +61,10 @@ router.post("/command", async (ctx, next) => {
       case "resume":
         ctx.body = await bot.music.resume(guildId);
         break;
+      case "previous":
+      case "prev":
+        ctx.body = await bot.music.previous(guildId);
+        break;
       case "skip":
       case "s":
         ctx.body = await bot.music.skip(guildId);

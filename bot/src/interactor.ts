@@ -41,6 +41,12 @@ export const performInteraction = async (interaction: Interaction) => {
       await bot.music.resume(interaction.guildId);
       await interaction.editReply("Resumed!");
       break;
+    case "previous":
+    case "prev":
+      await interaction.reply({ content: "Playing previous..." });
+      await bot.music.previous(interaction.guildId);
+      await interaction.editReply("Playing previous!");
+      break;
     case "skip":
     case "s":
       await interaction.reply({ content: "Skipping..." });

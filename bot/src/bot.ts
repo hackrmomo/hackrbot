@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
 import { commands } from "./config";
-import { music, registerEvents } from "./music";
+import { music } from "./music";
 import { performInteraction } from "./interactor";
 import "./api";
 import { Player } from "discord-player";
@@ -22,7 +22,8 @@ export const client = new Client({
 
 export const connectToSocket = async (token: string) => {
   if (socket) {
-    // already connected
+    socket.auth["token"] = token;
+    socket.disconnect().connect();
     return;
   }
   socket = io("http://web/", {
@@ -30,9 +31,8 @@ export const connectToSocket = async (token: string) => {
       token
     }
   });
-  socket.on("connect", async () => {
+  socket.on("connect", () => {
     console.log("Connected to socket");
-    await registerEvents();
   });
 }
 

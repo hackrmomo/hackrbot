@@ -28,7 +28,7 @@ export default async function handler(
 ) {
   const token = await encode({
     secret: process.env.JWT_SECRET!,
-    maxAge: -1,
+    maxAge: 60 * 60 * 24 * 7,
     token: {
       isBot: true,
     }

@@ -11,7 +11,7 @@ import { Menu } from '@mui/icons-material';
 import axios from 'axios';
 import { Box } from '@mui/system';
 import { useState } from 'react';
-import { Link } from '@/components/UnstyledLink'; 
+import { Link } from '@/components/UnstyledLink';
 
 
 export default function App(props: AppProps) {
@@ -91,6 +91,9 @@ const Content = ({ Component, pageProps }: AppProps) => {
         onClose={() => setSidebarOpen(false)}
       >
         <List>
+          <ListItem>
+            <h2>Servers</h2>
+          </ListItem>
           {session && session.user.servers && session.user.servers.map((server) => <>
             <ListItem key={server.id}>
               <Link href={`/server/${server.id}`} passHref>

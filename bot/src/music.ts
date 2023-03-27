@@ -1,38 +1,50 @@
 import { client, player, socket } from "./bot";
 import { channel } from "diagnostics_channel";
-import { GuildNodeManager, GuildQueuePlayerNode, QueueRepeatMode, StreamDispatcher, useQueue } from "discord-player";
+import { GuildNodeManager, GuildQueuePlayerNode, QueueRepeatMode, StreamDispatcher, useHistory, usePlayer, useQueue, useTimeline } from "discord-player";
 
-
-export const registerEvents = () => {
-  player.events.on("audioTrackAdd", (gq) => {
-    console.log("audioTrackAdded!");
-    heartbeat(gq.guild.id);
-  });
-};
+const ongoingHeartbeats = new Map<string, NodeJS.Timeout>();
 
 const heartbeat = (guildId: string) => {
-  socket.emit("bot-heartbeat", {
-    guildId,
-    data: {
-      id: guildId,
-      queue: useQueue(guildId).tracks.toArray(),
-      playing: useQueue(guildId).isPlaying,
-      nowPlaying: useQueue(guildId).currentTrack
-    }
-  });
+  if (socket && socket.connected)
+    socket.emit("bot-heartbeat", {
+      guildId,
+      data: {
+        id: guildId,
+        queue: useQueue(guildId).tracks.toArray(),
+        playing: !useTimeline(guildId).paused,
+        nowPlaying: useQueue(guildId).currentTrack,
+        timestamp: useTimeline(guildId).timestamp,
+        history: useHistory(guildId).tracks.toArray(),
+      }
+    });
+};
+
+const addToContinuousHeartbeat = (guildId: string) => {
+  const timer = setInterval(() => {
+    heartbeat(guildId);
+  }, 1000);
+  ongoingHeartbeats.set(guildId, timer);
+};
+
+const removeFromContinuousHeartbeat = (guildId: string) => {
+  clearInterval(ongoingHeartbeats.get(guildId));
+  ongoingHeartbeats.delete(guildId);
 };
 
 const leave = async (guildId: string) => {
   player.voiceUtils.getConnection(guildId).disconnect();
+  removeFromContinuousHeartbeat(guildId);
 };
 
 const join = async (userId: string, guildId: string) => {
   const channel = client.guilds.cache.get(guildId)?.members.cache.get(userId)?.voice.channel;
+  addToContinuousHeartbeat(guildId);
   player.voiceUtils.join(channel)
 };
 
 const play = async (userId: string, guildId: string, url: string) => {
   const channel = client.guilds.cache.get(guildId)?.members.cache.get(userId)?.voice.channel;
+  addToContinuousHeartbeat(guildId);
   player.play(channel, url, {
     nodeOptions: {
       skipOnNoStream: true,
@@ -64,6 +76,11 @@ const resume = async (guildId: string) => {
 
 const skip = async (guildId: string) => {
   useQueue(guildId).node.skip();
+  return readQueue(guildId);
+};
+
+const previous = async (guildId: string) => {
+  useHistory(guildId).back();
   return readQueue(guildId);
 };
 
@@ -117,6 +134,7 @@ export const music = {
   play,
   pause,
   resume,
+  previous,
   skip,
   readQueue,
   clear,
