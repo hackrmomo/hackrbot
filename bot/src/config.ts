@@ -28,6 +28,10 @@ export const commands  = [
     description: "hackrbot resumes playing music",
   },
   {
+    name: "previous",
+    description: "hackrbot plays the previous song",
+  },
+  {
     name: "skip",
     description: "hackrbot skips the current song",
   },

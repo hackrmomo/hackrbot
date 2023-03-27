@@ -108,8 +108,12 @@ router.post("/command", async (ctx, next) => {
       case "mv":
         ctx.body = await bot.music.move(guildId, params.from, params.to);
         break;
+      case "seek":
+        ctx.body = await bot.music.seek(guildId, params.position as number);
+        break;
       default:
         ctx.body = "unknown command";
+        break;
     }
   } catch (e) {
     ctx.body = {

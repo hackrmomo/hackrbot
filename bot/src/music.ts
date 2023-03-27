@@ -128,6 +128,11 @@ const move = async (guildId: string, from: number, to: number) => {
   return readQueue(guildId);
 };
 
+const seek = async (guildId: string, position: number) => {
+  await useTimeline(guildId).setPosition(position);
+  return readQueue(guildId);
+};
+
 export const music = {
   leave,
   join,
@@ -143,4 +148,5 @@ export const music = {
   np,
   remove,
   move,
+  seek
 };

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import styled from "@emotion/styled"
-import { Box, Button, CircularProgress, Divider, ListItem } from "@mui/material"
+import { Box, Button, CircularProgress, Divider, ListItem, Slider } from "@mui/material"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import Image from "next/image"
@@ -25,6 +25,7 @@ export default function Server({ token }: { token: string }) {
     playing: false,
     nowPlaying: null,
     queue: [],
+    history: [],
     timestamp: {
       current: {
         label: "00:00",
@@ -37,6 +38,7 @@ export default function Server({ token }: { token: string }) {
       progress: 0
     }
   })
+  const [tempBarProgress, setTempBarProgress] = useState<number | null>()
 
   const socketInitializer = async () => {
     if (socket) {
@@ -80,6 +82,28 @@ export default function Server({ token }: { token: string }) {
               <h1>{guildStatus.nowPlaying?.title || guildStatus.queue[0].title}</h1>
               <h4>{guildStatus.nowPlaying?.author || guildStatus.queue[0].author}</h4>
               <Image width={300} height={300} src={guildStatus.nowPlaying ? guildStatus.nowPlaying.thumbnail ?? "/MissingArtwork.png" : guildStatus.queue[0].thumbnail ?? "/MissingArtwork.png"} alt="album-art" />
+              <Slider
+                sx={{
+                  minWidth: 300,
+                  width: "50vw",
+                  maxWidth: 500,
+                }}
+                value={tempBarProgress ?? guildStatus.timestamp?.current.value}
+                step={1000}
+                max={guildStatus.timestamp?.total.value}
+                onChange={(_, value) => {
+                  setTempBarProgress(value as number)
+                }}
+                onChangeCommitted={(_, value) => {
+                  socket.emit("bot-command", {
+                    command: "seek",
+                    guildId: query.id,
+                    params: {
+                      position: value
+                    }
+                  })
+                  setTempBarProgress(null)
+                }} />
               <MediaContainer>
                 <MediaButton variant="text" onClick={() => socket.emit("bot-command", {
                   command: "previous",
