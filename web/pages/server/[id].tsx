@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import styled from "@emotion/styled"
-import { Box, Button, CircularProgress, Divider, ListItem, Slider } from "@mui/material"
+import { Box, Button, CircularProgress, Divider, ListItem, Slider, Typography } from "@mui/material"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/router"
 import Image from "next/image"
@@ -104,6 +104,20 @@ export default function Server({ token }: { token: string }) {
                   })
                   setTempBarProgress(null)
                 }} />
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: "50vw",
+                  maxWidth: 500,
+                  minWidth: 300,
+                  mt: -1
+                }}
+              >
+                <TinyText>{guildStatus.timestamp?.current.label}</TinyText>
+                <TinyText>{guildStatus.timestamp?.total.label}</TinyText>
+              </Box>
               <MediaContainer>
                 <MediaButton variant="text" onClick={() => socket.emit("bot-command", {
                   command: "previous",
@@ -272,3 +286,10 @@ const QueueContainer = styled(Box)`
     margin-right: 10px;
   }
 `
+
+const TinyText = styled(Typography)({
+  fontSize: '0.75rem',
+  opacity: 0.38,
+  fontWeight: 500,
+  letterSpacing: 0.2,
+});
